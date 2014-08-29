@@ -1,0 +1,90 @@
+<script src="../js/jquery.min.js"></script>
+<script src="../js/canvas-graphics.js"></script>
+
+<canvas  id="canvas" width="600" height="400"></canvas>
+
+<script>
+g = GUtil.createGraphis({target: '#canvas' });
+g.clear();
+
+	
+
+ 
+g.x=0,g.y=0;g.clearLoops();
+var v=5;var speedIncr=0.5;
+var gameOver = g.create('Text',{text:'Game Over',x:3,y:6,font:'Bold 50px Sans-Serif',showFill:true,fillStyle:'red'});
+var msg = g.create('Text',{text:'',x:1,y:6,font:'Bold 25px Sans-Serif',showFill:true,fillStyle:'red'});
+var scoreText = g.create('Text',{text:'score: 0',x:10.5,y:7,font:'20px Sans-Serif',showFill:true,fillStyle:'blue',dropShadow:false});
+var snake= g.create('Tracer',{x:0,y:3,vx:v,vy:0,lineWidth:10,strokeStyle:'green',length:25,defaultLength:25,nodeLength:0.10});
+var head= g.create('Rectangle',{w:0.3,h:0.3,angle:45,showFill:true,fillStyle:'yellow'});
+ 
+ 
+snake.head=head;
+food = g.create('Sphere',{r:0.2,x:4,y:5,});
+ 
+for(var i=0;i<100;i++){
+	snake.move().update();
+}
+var loopId = g.loop(function(i){
+ 
+g.clear();	
+snake.move();
+ 
+ 
+isCollided=false;
+$.each(snake.path.points,function(i,point){			
+	if(GUtil.Math.distance(point,snake.position()) <0.10 && i < snake.length-5){
+		isCollided=true;
+		return false;
+	}		
+});	
+ 
+if(GUtil.Math.distance(food.position(),snake.position()) < 0.2){
+	snake.length+=4;
+	var score = snake.length-snake.defaultLength;
+	scoreText.text = 'Score: '+ score;
+	food.x = GUtil.Math.getRand(1,11);
+	food.y = GUtil.Math.getRand(1,7);
+	food.color = GUtil.Color.getRandColor();
+	v+=speedIncr;		
+}		
+ 
+if(isCollided){				
+	g.stopLoop(loopId);	
+	g.draw(gameOver);
+}			
+g.drawArray([food,snake,scoreText]); 
+ 
+});
+ 
+ g.stopLoop(loopId);
+ msg.fillStyle='#fff';
+ msg.text="GameControls:	up:W, down:S, left:A, right:D;";
+ g.draw(msg);
+ msg.fillStyle='yellow';
+ msg.y-=1; msg.text = 'Press Spacebar to start';g.draw(msg);
+ 
+ 
+GUtil.KeyEvents.onKeyEvent('keydown', {
+  A: function(e) {
+    snake.vy = 0;
+    if (snake.vx == 0) snake.vx = -v;
+  },
+  D: function(e) {
+    snake.vy = 0;
+    if (snake.vx == 0) snake.vx = v;
+  },
+  W: function(e) {
+    snake.vx = 0;
+    if (snake.vy == 0) snake.vy = v;
+  },
+  S: function(e) {
+    snake.vx = 0;
+    if (snake.vy == 0) snake.vy = -v;
+  },
+  spacebar: function(e) {
+    g.toggleLoop(loopId);
+  }
+}); 
+ 
+</script>

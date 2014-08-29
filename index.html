@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<!-- saved from url=(0059)http://getbootstrap.com/2.3.2/getting-started.html#examples -->
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>Canvas Graphics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- Le styles -->
+  <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css" rel="stylesheet">
+  <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="http://getbootstrap.com/2.3.2/assets/css/docs.css" rel="stylesheet">
+  <link href="http://getbootstrap.com/2.3.2/assets/js/google-code-prettify/prettify.css" rel="stylesheet">
+  <link href="css/custom.css" rel="stylesheet">
+</head>
+
+<body data-spy="scroll" data-target=".bs-docs-sidebar" data-twttr-rendered="true">
+
+
+  <!-- Navbar
+    ================================================== -->
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="brand" href="http://getbootstrap.com/2.3.2/index.html">Canvas Graphics</a>
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+            <li class="">
+              <a href="http://saratsivam.github.io">Home</a>
+            </li>
+            <!--
+			<li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Examples <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li class="divider"></li>
+                  <li class="nav-header">Nav header</li>
+                  <li><a href="#">Separated link</a></li>
+                  <li><a href="#">One more separated link</a></li>
+                </ul>
+              </li>
+				-->
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subhead
+================================================== -->
+  <header class="jumbotron subhead" id="overview">
+    <div class="container">
+      <h1>Canvas Graphics</h1>
+      <p class="lead">A simple, lightweight script to create interactive animations</p>
+    </div>
+  </header>
+
+
+  <div class="container">
+
+
+
+    <!-- Docs nav
+    ================================================== -->
+    <div class="row">
+      <div class="span3 bs-docs-sidebar">
+        <ul class="nav nav-list bs-docs-sidenav affix-top">
+          <li class="nav-header">Getting Started</li>
+          <li class="active in"><a href="#simpleExample"><i class="icon-chevron-right"></i> Simple Example</a>
+          </li>
+          <li class=""><a href="#graphicsObject"><i class="icon-chevron-right"></i> Graphics Object</a>
+          </li>
+          <li class=""><a href="#graphicsContainer"><i class="icon-chevron-right"></i> Graphics Container</a>
+          </li>
+          <li class=""><a href="#runningSimpleAnimation"><i class="icon-chevron-right"></i>Running Simple Animation</a>
+          </li>
+          <li class=""><a href="#groupingtheObjects"><i class="icon-chevron-right"></i> Grouping the Objects</a>
+          </li>
+          <li class="nav-header">Physics Visualizations</li>
+          <li class=""><a href="#stationaryWave"><i class="icon-chevron-right"></i> Stationary Wave Formation</a>
+          </li>
+          <li class=""><a href="#logintudinalWave"><i class="icon-chevron-right"></i> Longitudinal Wave Formation</a>
+          </li>
+          <li class=""><a href="#lissajous"><i class="icon-chevron-right"></i> Lissajous Pattern</a>
+          </li>
+        <li class="nav-header">Algorithm Visulaizations</li>
+            <li class=""><a href="#hanoi"><i class="icon-chevron-right"></i> TowersOfHanoi</a>
+          </li>
+           <li class="nav-header">Games</li>
+             <li class=""><a href="#snakeGame"><i class="icon-chevron-right"></i> Snake Game</a>
+          </li>
+        </ul>
+      </div>
+      <div class="span9">
+
+        <!-- Simple Example
+        ================================================== -->
+        <section id="simpleExample">
+          <div class="page-header">
+            <h1> Simple Example</h1>
+          </div>
+          <h4>Co-ordinate System and Units</h4>
+          <p>
+            All the measurements are in normal units measured from bottom left of the canvas. In the settings, if unit=50 then 1 unit is equils to 50 pixels.
+          </p>
+          <p></p>
+          <p>Create an instace for graphics container<code>var g = GUtil.createGraphis(options);</code> 
+          </p>
+
+          <p>
+            Create an instace for graphicObject <code>var gObject = g.create('ObjectName',options);</code>	
+          </p>
+          <p>
+            Draw the gObject. <code>g.draw(gObject);</code>	
+          </p>
+
+          <h3>Example</h3>
+
+
+
+
+          <ul class="nav nav-tabs custom-nav-tabs">
+            <li class="active"><a href="#code1">Code</a>
+            </li>
+            <li><a href="#result1">Result</a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div class="tab-pane active" id="code1">
+              <pre class="prettyprint linenums">
+/* Create an instance of Graphics */
+var g = GUtil.createGraphis({
+    target: '#canvas',showGrid:true,x:2,y:1,unit:50	
+});
+
+
+/* Create a rectagle */
+var rect = g.create('Rectangle',{x:3,y:2,w:2,h:1});
+
+/* draw rectangle */
+g.draw(rect);
+</pre>
+            </div>
+            <div class="tab-pane" id="result1">
+            </div>
+          </div>
+          <p>
+            Supported ObjectNames are <code>'Line'</code>, <code>'Rectangle'</code>, <code>'Circle'</code>, <code>'Sphere'</code>, <code>'Path'</code>,
+            <code>'Tracer'</code>, <code>'Layer'</code>
+          </p>
+
+        </section>
+
+
+
+
+
+
+
+        <!-- Graphics Object Methods
+        ================================================== -->
+        <section id="graphicsObject">
+          <div class="page-header">
+            <h1>Graphics Object</h1>
+          </div>
+
+          <p>
+            some description
+          </p>
+
+
+          <h4>Properties</h4>	
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>category</th>
+                <th style="width: 100px;">Name</th>
+                <th style="width: 50px;">type</th>
+                <th style="width: 100px;">default</th>
+                <th>description</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr>
+                <td rowspan="5">geometric</td>
+                <td>x</td>
+                <td>number</td>
+                <td>0</td>
+                <td>x co-ordinate of the center of the gObject</td>
+              </tr>
+              <tr>
+                <td>y</td>
+                <td>number</td>
+                <td>0</td>
+                <td>y co-ordinate of the center of the gObject</td>
+              </tr>
+              <tr>
+                <td>w</td>
+                <td>number</td>
+                <td>1</td>
+                <td>width of gObject</td>
+              </tr>
+              <tr>
+                <td>h</td>
+                <td>number</td>
+                <td>1</td>
+                <td>height of gObject</td>
+              </tr>
+              <tr>
+                <td>r</td>
+                <td>number</td>
+                <td>1</td>
+                <td>radius of gObject</td>
+              </tr>
+              <tr>
+                <td rowspan="5">fill/stroke</td>
+                <td>showFill</td>
+                <td>boolean</td>
+                <td>false</td>
+                <td>somethinm.....</td>
+              </tr>
+              <tr>
+                <td>hideStroke</td>
+                <td>boolean</td>
+                <td>false</td>
+                <td>somethinm.....</td>
+              </tr>
+              <tr>
+                <td>lineWidth</td>
+                <td>number</td>
+                <td>2</td>
+                <td>somethinm.....</td>
+              </tr>
+              <tr>
+                <td>fillStyle</td>
+                <td>string</td>
+                <td>rgba(0,0,0,0.2)</td>
+                <td>somethinm.....</td>
+              </tr>
+              <tr>
+                <td>strokeStyle</td>
+                <td>string</td>
+                <td>rgba(0,0,0,0.5)</td>
+                <td>somethinm.....</td>
+              </tr>
+              <tr>
+                <td rowspan="5">shadow</td>
+                <td>dropShadow</td>
+                <td>boolean</td>
+                <td>true</td>
+                <td>somethinm.....</td>
+              </tr>
+              <tr>
+                <td>shadowColor</td>
+                <td>string</td>
+                <td>'black'</td>
+                <td>somethinm.....</td>
+              </tr>
+              <tr>
+                <td>shadowOffsetX</td>
+                <td>number</td>
+                <td>5</td>
+                <td>somethinm.....</td>
+              </tr>
+              <tr>
+                <td>shadowOffsetY</td>
+                <td>number</td>
+                <td>5</td>
+                <td>somethinm.....</td>
+              </tr>
+              <tr>
+                <td>shadowBlur</td>
+                <td>number</td>
+                <td>5</td>
+                <td>somethinm.....</td>
+              </tr>
+              <tr>
+                <td rowspan="2">scalling</td>
+                <td>scaleX</td>
+                <td>number</td>
+                <td>1</td>
+                <td>somethinm.....</td>
+              </tr>
+              <tr>
+                <td>scaleY</td>
+                <td>number</td>
+                <td>1</td>
+                <td>somethinm.....</td>
+              </tr>
+              <tr>
+                <td rowspan="6">transform</td>
+                <td>m11</td>
+                <td>number</td>
+                <td>1</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>m12</td>
+                <td>number</td>
+                <td>0</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>m21</td>
+                <td>number</td>
+                <td>0</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>m22</td>
+                <td>number</td>
+                <td>1</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>dx</td>
+                <td>number</td>
+                <td>0</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>dy</td>
+                <td>number</td>
+                <td>0</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <h4>Methods</h4>	
+          <p>Getter:<code> .position()</code> returns the position object<code> {x:number,y:number}</code>
+          </p>
+          <p>Setter:<code> .position(position)</code> sets the position</p>
+          <p>	<code> .move()</code> advances the position by one time step</p>
+
+
+          <h3>Supported Objects</h3>	
+          <h4>Options</h4>	
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width: 100px;">Name</th>
+                <th>description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>'Line'</code>
+                </td>
+                <td>cartisian line from <code>x, y</code>to <code>x2, y2</code> 
+                  <br>set <code>type='polar'</code>to make a polar line from <code>x, y</code> with radius<code> r </code>and with inclination defined by <code>angle</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>'Rectangle'</code>
+                </td>
+                <td>centered at <code>x, y</code> and dimensions <code>w,h</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>'Circle'</code>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>'Sphere'</code>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>'Path'</code>
+                </td>
+                <td>
+                  To contain and connect the positions.
+                  <br>
+                  <code>.add(position)</code> adds the position in to the path
+                  <br>user the property <code>close=true</code> to close
+                  <br>few other methods available are <code>.getHead</code>, <code>.getTail</code> and <code>.clear</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>'Tracer'</code>
+                </td>
+                <td>to be updated</td>
+              </tr>
+              <tr>
+                <td><code>'Layer'</code>
+                </td>
+                <td>to be updated</td>
+              </tr>
+
+
+            </tbody>
+          </table>
+
+
+
+
+          <h4>Example</h3>		
+			<ul class="nav nav-tabs custom-nav-tabs" >
+	<li class="active"><a href="#code2">Code</a></li>
+	<li><a href="#result2">Result</a></li>	
+	</ul>
+
+	<div class="tab-content">
+		<div class="tab-pane active" id="code2">
+			<pre class="prettyprint">
+
+var rect = g.create('Rectangle',{x:2,y:3,strokeStyle:'green'});
+var circle = g.create('Circle',{x:3,y:1.5, r:1, fillStyle:'yellow',showFill:true});
+var line = g.create('Line',{x:1,y:2,x2:5,y2:3,strokeStyle:'blue'});
+var polarLine = g.create('Line',{type:'polar',x:4,y:4,r:3,angle:45,strokeStyle:'red'});
+var sphere = g.create('Sphere',{x:6,y:2,r:0.5,color:'blue'});
+
+/* method chaining */
+g.draw(rect).draw(circle);
+
+/* drawArray*/
+g.drawArray([line,polarLine,sphere]);
+			</pre>
+		</div>
+		<div class="tab-pane" id="result2">
+			result
+		</div>
+	
+	</div> 
+        </section>
+		
+  <!-- Section 3
+        ================================================== -->
+
+		  <section id="graphicsContainer">
+			<div class="page-header">
+				<h1>Graphics Container</h1>
+			</div>
+			
+			
+			
+			<h4>Options</h4>	
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width: 100px;">Name</th>
+                <th style="width: 50px;">type</th>
+                <th style="width: 100px;">default</th>
+                <th>description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>target</td>
+                <td>string</td>
+                <td>undefined</td>
+                <td>Reference to the canvas element, where the graphics should be rendered.</td>
+              </tr>
+              <tr>
+                <td>unit</td>
+                <td>number</td>
+                <td>50</td>
+                <td>Number of pixels to be treated as 1 unit.</td>
+              </tr>
+              <tr>
+                <td>showGrid</td>
+                <td>boolean</td>
+                <td>false</td>
+                <td>To show grid with 1 unit spacing</td>
+              </tr>
+              <tr>
+                <td>color</td>
+                <td>string</td>
+                <td>'white'</td>
+                <td>background color</td>
+              </tr>
+              <tr>
+                <td>gridColor</td>
+                <td>string</td>
+                <td></td>
+                <td>background color</td>
+              </tr>
+              <tr>
+                <td>x</td>
+                <td>number</td>
+                <td>0</td>
+                <td rowspan=2>Co-ordinates of the origin</td>
+              </tr>
+              <tr>
+                <td>y</td>
+                <td>number</td>
+                <td>0</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Methods</h4>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width: 100px;">Name</th>
+                <th>description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>.clear()</code>
+                </td>
+                <td>repaines the whole canvas area with the options.color</td>
+              </tr>
+              <tr>
+                <td><code>.create(objectName, settings)</code>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>.draw(gObject, settings)</code>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>.drawArray([gObject1,gObject2,...], settings)</code>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>.loop(function, time)</code>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>.stopLoop(loopId)</code>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>.stopLoop(startLoop)</code>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>.clearLoops()</code>
+                </td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+
+
+
+        </section>
+
+
+
+
+        <!-- Section 3
+        ================================================== -->
+        <section id="runningSimpleAnimation">
+          <div class="page-header">
+            <h1>Running Simple Animation</h1>
+          </div>
+          <p class="lead">
+            Create and run loop
+          </p>
+
+          <ul class="nav nav-tabs custom-nav-tabs">
+            <li class="active"><a href="#code3">Code</a>
+            </li>
+            <li><a href="#result3">Result</a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div class="tab-pane active" id="code3">
+              <pre class="prettyprint linenums">
+/* Create an object instace with vx, vy being the components of velocities */
+var rect = g.create('Rectangle',{vx:5,vy:2.3,strokeStyle:'red'});
+
+/* Creating a time loop */
+g.loop(function(t){
+	/* rotate rectale in time*/
+	rect.angle = t/2; 
+	
+	/* draw the rectanle as well as update its position */
+	g.draw(rect.move());
+
+});
+</pre>
+            </div>
+            <div class="tab-pane" id="result3">
+            </div>
+          </div>
+        </section>
+
+
+
+        <!-- Section 4
+        ================================================== -->
+        <section id="groupingtheObjects">
+          <div class="page-header">
+            <h1>Grouping the Objects</h1>
+          </div>
+          <ul class="nav nav-tabs custom-nav-tabs">
+            <li class="active"><a href="#code4">Code</a>
+            </li>
+            <li><a href="#result4">Result</a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div class="tab-pane active" id="code4">
+              <pre class="prettyprint linenums">
+/*creating all necessary objects to creat a piston*/
+var c = g.create('Circle',{y:-1,r:0.5});	 
+var l1 = g.create('Line',{type:'polar',y:-1,r:0.5});	  
+var l2 = g.create('Line',{x2:0,r:2});
+var r = g.create('Rectangle',{x:0,w:2,h:1,showFill:true});	  
+var s1 = g.create('Sphere',{r:0.2});
+var s2 = g.create('Sphere',{r:0.2});
+
+/*create a layer to contain all the piston parts*/
+var layer = g.create('Layer',{w:2,h:5,scaleX:1,scaleY:1});
+layer.add(c).add(s1).add(s2).add(l1).add(l2).add(r);
+
+g.loop(function(t){			
+	g.clear();						
+	var phase = t*5;				
+	buildPiston(phase,2.5);				
+	buildPiston(phase+90,5);	
+	buildPiston(phase+180,7.5);
+	buildPiston(phase+270,10);			
+});	
+
+/* drawing the piston for the given phase angle and at position x on the grid*/	
+function buildPiston(phase,x){
+	l1.angle=phase;	
+	s1.position(l1.position2());
+	l2.position(l1.position2());			
+	l2.y2 = Math.sqrt(l2.r*l2.r-(l2.x2-l2.x)*(l2.x2-l2.x))+l2.y;
+	s2.position(l2.position2());			
+	r.y = l2.y2;				
+	layer.x=x;layer.y=4;/* translate the whole layer to the position x,y*/		
+	g.draw(layer);	
+}
+</pre>
+            </div>
+            <div class="tab-pane" id="result4">
+            </div>
+          </div>
+        </section>
+
+
+
+
+
+
+
+
+        <!--	 ================================================== -->
+        <section id="stationaryWave">
+          <div class="page-header">
+            <h1>Stationary Wave Formation</h1>
+          </div>
+          <ul class="nav nav-tabs custom-nav-tabs">
+            <li class="active"><a href="#stationaryCode">Code</a>
+            </li>
+            <li><a href="#stationaryResult">Result</a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div class="tab-pane active" id="stationaryCode">
+              <pre class="prettyprint linenums">
+g.x=6;g.y=4;	g.color="#efefff";
+var settings = {shadowColor:'blue',shadowOffsetX:50,shadowOffsetY:50,shadowBlur:30};		
+var path1 = g.create('Path',settings);				
+var path2 = g.create('Path',settings);		
+var path3 = g.create('Path',settings);
+path1.strokeStyle='green';
+path2.strokeStyle='blue';
+path3.strokeStyle='red';
+var lambda = 3;	
+var k = 0.05;	
+g.loop(function(t,loopId){
+g.clear();
+path1.clear();
+path2.clear();
+path3.clear();
+for(var x=-6;x<6;x+=0.1){
+	var y1 = Math.sin(x*2*Math.PI/lambda-k*t);
+	var y2 = Math.sin(x*2*Math.PI/lambda+k*t);
+	var y=y1+y2;
+	path1.add(x,y1);
+	path2.add(x,y2);
+	path3.add(x,y);			
+}
+g.drawArray([path1,path2,path3]);	
+requestId=loopId;
+});	
+</pre>
+            </div>
+            <div class="tab-pane" id="stationaryResult">
+            </div>
+          </div>
+        </section>
+
+
+
+
+        <!--	 ================================================== -->
+        <section id="logintudinalWave">
+          <div class="page-header">
+            <h1>Logintudinal Wave Formation</h1>
+          </div>
+          <ul class="nav nav-tabs custom-nav-tabs">
+            <li class="active"><a href="#logintudinalWaveCode">Code</a>
+            </li>
+            <li><a href="#logintudinalWaveResult">Result</a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div class="tab-pane active" id="logintudinalWaveCode">
+              <pre class="prettyprint linenums">
+/* */
+g.x=6;g.y=4;	
+var rect = g.create('Rectangle',{w:0.01,h:10,strokeStyle:'blue'});		
+var lambda = 6;	
+var k = 0.05;	
+g.loop(function(t){
+	g.clear();	
+	for(var x=-6;x<6;x+=0.4){
+		var y = Math.sin(x*2*Math.PI/lambda-k*t);					
+		rect.x = x+0.4*y;			
+		g.draw(rect);
+	}	
+});	
+</pre>
+            </div>
+            <div class="tab-pane" id="logintudinalWaveResult">
+            </div>
+          </div>
+        </section>
+
+
+
+        <!--	 ================================================== -->
+        <section id="lissajous">
+          <div class="page-header">
+            <h1>Lissajous Pattern</h1>
+          </div>
+          <ul class="nav nav-tabs custom-nav-tabs">
+            <li class="active"><a href="#lissajousCode">Code</a>
+            </li>
+            <li><a href="#lissajousResult">Result</a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div class="tab-pane active" id="lissajousCode">
+              <pre class="prettyprint linenums">
+/* */
+g.x=6;g.y=4;g.color="#000";
+var fx = 1.003;
+var fy=GUtil.Math.getRand(1,3)+GUtil.Math.getRand(0,1)/2;
+var n=0;var dt=0.01;var fi=0.01;
+var settings = {lineWidth:5,shadowColor:'#ff00ff',shadowOffsetX:0,shadowOffsetY:0,shadowBlur:30,strokeStyle:'white'};		
+var path = g.create('Path',settings);
+var sphere = g.create('Sphere',{r:0.2,x:0,y:0,color:'orange'});  	
+g.loop(function(t){  		
+	fi=fi+0.01;	
+	g.clear();path.clear();			
+	for(i=0;i<200;i++){
+		n++;
+		var x=2*Math.sin(2*Math.PI*fx*n*dt);
+		var y=2*Math.sin(2*Math.PI*fy*n*dt+fi);		
+		path.add(x,y);
+	}	
+	g.draw(path);
+	
+});  
+</pre>
+            </div>
+            <div class="tab-pane" id="lissajousResult">
+            </div>
+          </div>
+        </section>
+
+
+
+
+        <!--	 ================================================== -->
+        <section id="hanoi">
+          <div class="page-header">
+            <h1>TowersOfHanoi</h1>
+          </div>
+          <ul class="nav nav-tabs custom-nav-tabs">
+            <li class="active"><a href="#hanoiCode">Code</a>
+            </li>
+            <li><a href="#hanoiResult">Result</a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div class="tab-pane active" id="hanoiCode">
+              <pre class="prettyprint linenums">
+/* */
+g.x=6;g.y=1;		
+var n=5; 
+var delay=300;
+var poleA = {name:"A",x:-3,y:0,disks:[]};
+var poleB = {name:"B",x:0,y:0,disks:[]};
+var poleC = {name:"C",x:3,y:0,disks:[]};		
+
+poles={A:poleA,B:poleB,C:poleC};
+
+function draw(){
+	g.clear();
+	$.each(poles,function(k,pole){
+		var h=0.3;var y=-h;
+		g.draw('Rectangle',{x:pole.x,y:pole.y+1,w:0.1,h:2,showFill:true,fillStyle:'black'});
+		$.each(pole.disks,function(i,disk){						
+			g.draw('Rectangle',{
+				h:h,
+				y:y+=h,
+				w:disk.w,
+				x:pole.x,
+				showFill:true,
+				strokeStyle:'black',
+				fillStyle:disk.fillStyle,					
+			});
+			
+		});		
+	});				
+}
+	
+for(var i=n;i>0;i--){			  
+	var w = GUtil.Math.getlineMap(i,0,n,0.2,3);					
+	var rect = g.create('Rectangle',{w:w,showFill:true,fillStyle:GUtil.Color.getRandColor()});
+	poleA.disks.push(rect);
+}
+
+hanoiRecorder=[];	
+function hanoi(n, from , other, to) {		
+		if(n>0){
+			hanoi(n-1, from, to, other);				
+				hanoiRecorder.push({n:n,from:from,to:to});
+			hanoi(n-1, other, from, to);					
+		}	
+}
+hanoi(n,'A','B','C');		
+
+function render(){
+	var record = hanoiRecorder.shift();
+	if(record){		
+		g.clear();		
+		var from = poles[record.from].disks;
+		var to= poles[record.to].disks;
+		to.push(from.pop());
+		draw();
+		
+		
+		window.setTimeout(render,delay);
+	}				
+}
+
+draw();window.setTimeout(render,delay);
+</pre>
+            </div>
+            <div class="tab-pane" id="hanoiResult">
+            </div>
+          </div>
+        </section>
+
+
+
+
+
+        <!--	 ================================================== -->
+        <section id="snakeGame">
+          <div class="page-header">
+            <h1>SnakeGame</h1>
+          </div>
+          <ul class="nav nav-tabs custom-nav-tabs">
+            <li class="active"><a href="#snakeGameCode">Code</a>
+            </li>
+            <li><a href="#snakeGameResult">Result</a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div class="tab-pane active" id="snakeGameCode">
+<pre class="prettyprint linenums">
+
+ 
+g.x=0,g.y=0;g.clearLoops();
+var v=5;var speedIncr=0.5;
+var gameOver = g.create('Text',{text:'Game Over',x:3,y:6,font:'Bold 50px Sans-Serif',showFill:true,fillStyle:'red'});
+var msg = g.create('Text',{text:'',x:1,y:6,font:'Bold 25px Sans-Serif',showFill:true,fillStyle:'red'});
+var scoreText = g.create('Text',{text:'score: 0',x:10.5,y:7,font:'20px Sans-Serif',showFill:true,fillStyle:'blue',dropShadow:false});
+var snake= g.create('Tracer',{x:0,y:3,vx:v,vy:0,lineWidth:10,strokeStyle:'green',length:25,defaultLength:25,nodeLength:0.10});
+var head= g.create('Rectangle',{w:0.3,h:0.3,angle:45,showFill:true,fillStyle:'yellow'});
+ 
+ 
+snake.head=head;
+food = g.create('Sphere',{r:0.2,x:4,y:5,});
+ 
+for(var i=0;i<100;i++){
+	snake.move().update();
+}
+var loopId = g.loop(function(i){
+ 
+g.clear();	
+snake.move();
+ 
+ 
+isCollided=false;
+$.each(snake.path.points,function(i,point){			
+	if(GUtil.Math.distance(point,snake.position()) <0.10 && i < snake.length-5){
+		isCollided=true;
+		return false;
+	}		
+});	
+ 
+if(GUtil.Math.distance(food.position(),snake.position()) < 0.2){
+	snake.length+=4;
+	var score = snake.length-snake.defaultLength;
+	scoreText.text = 'Score: '+ score;
+	food.x = GUtil.Math.getRand(1,11);
+	food.y = GUtil.Math.getRand(1,7);
+	food.color = GUtil.Color.getRandColor();
+	v+=speedIncr;		
+}		
+ 
+if(isCollided){				
+	g.stopLoop(loopId);	
+	g.draw(gameOver);
+}			
+g.drawArray([food,snake,scoreText]); 
+ 
+});
+ 
+ g.stopLoop(loopId);
+ msg.fillStyle='#fff';
+ msg.text="GameControls:	up:W, down:S, left:A, right:D;";
+ g.draw(msg);
+ msg.fillStyle='yellow';
+ msg.y-=1; msg.text = 'Press Spacebar to start';g.draw(msg);
+ 
+ 
+GUtil.KeyEvents.onKeyEvent('keydown', {
+  A: function(e) {
+    snake.vy = 0;
+    if (snake.vx == 0) snake.vx = -v;
+  },
+  D: function(e) {
+    snake.vy = 0;
+    if (snake.vx == 0) snake.vx = v;
+  },
+  W: function(e) {
+    snake.vx = 0;
+    if (snake.vy == 0) snake.vy = v;
+  },
+  S: function(e) {
+    snake.vx = 0;
+    if (snake.vy == 0) snake.vy = -v;
+  },
+  spacebar: function(e) {
+    g.toggleLoop(loopId);
+  }
+}); 
+ 
+</pre>
+            </div>
+            <div class="tab-pane" id="snakeGameResult">
+            </div>
+          </div>
+        </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div style="display:none;">
+          <canvas id="canvas" width=600 height=400 style="background:black"></canvas>
+        </div>
+
+
+
+
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <!-- Footer
+    ================================================== -->
+  <footer class="footer">
+    <div class="container">
+      <p>All other project can be seen <a href="https://saratsivam.github.io/" target="_blank">here.</a>
+      </p>
+    </div>
+  </footer>
+
+
+
+  <!-- Le javascript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="./bootstrapfiles/widgets.js"></script>
+  <script src="./bootstrapfiles/jquery.js"></script>
+  <script src="./bootstrapfiles/bootstrap-transition.js"></script>
+  <script src="./bootstrapfiles/bootstrap-alert.js"></script>
+  <script src="./bootstrapfiles/bootstrap-modal.js"></script>
+  <script src="./bootstrapfiles/bootstrap-dropdown.js"></script>
+  <script src="./bootstrapfiles/bootstrap-scrollspy.js"></script>
+  <script src="./bootstrapfiles/bootstrap-tab.js"></script>
+  <script src="./bootstrapfiles/bootstrap-tooltip.js"></script>
+  <script src="./bootstrapfiles/bootstrap-popover.js"></script>
+  <script src="./bootstrapfiles/bootstrap-button.js"></script>
+  <script src="./bootstrapfiles/bootstrap-collapse.js"></script>
+  <script src="./bootstrapfiles/bootstrap-carousel.js"></script>
+  <script src="./bootstrapfiles/bootstrap-typeahead.js"></script>
+  <script src="./bootstrapfiles/bootstrap-affix.js"></script>
+  <script src="./bootstrapfiles/holder.js"></script>
+  <script src="./bootstrapfiles/prettify.js"></script>
+  <script src="./bootstrapfiles/application.js"></script>
+
+
+
+
+
+
+
+
+  <script src="js/canvas-graphics.js"></script>
+  <script src="js/custom.js"></script>
+
+
+
+
+
+</body>
+
+</html>

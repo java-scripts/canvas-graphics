@@ -1,0 +1,15 @@
+ .jumbotron:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: url(../imgs/pattern1.jpg) repeat center center;
+  opacity: .4;
+}
+
+canvas{
+border: 1px solid #DFDFDF
+}
