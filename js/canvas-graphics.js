@@ -286,7 +286,7 @@
         },
         drawRectangle: function(o) {
           //--------------------------------------------------------------------------------------------------------------------
-          if (o.angle) this.ctx.rotate(o.angle * Math.PI / 180);
+          //if (o.angle) this.ctx.rotate(o.angle * Math.PI / 180);
           if (!o.hideStroke) this.ctx.strokeRect(0 - o.w * this.unit / 2, 0 - o.h * this.unit / 2, o.w * this.unit, o.h * this.unit);
           if (o.showFill) this.ctx.fillRect(0 - o.w * this.unit / 2, 0 - o.h * this.unit / 2, o.w * this.unit, o.h * this.unit);
           return this;
@@ -311,7 +311,7 @@
         },
         drawSphere: function(o) {
           //--------------------------------------------------------------------------------------------------------------------
-          if (o.angle) this.ctx.rotate(o.angle * Math.PI / 180);
+          //if (o.angle) this.ctx.rotate(o.angle * Math.PI / 180);
           var r2 = o.r / 10; //inner radius		
           var x2 = (o.r - r2) / 2;
           var radgrad = this.ctx.createRadialGradient(x2 * this.unit, 0, r2 * this.unit, 0, 0, o.r * this.unit);
@@ -326,7 +326,7 @@
         },
         drawText: function(o) {
           //--------------------------------------------------------------------------------------------------------------------
-          if (o.angle) this.ctx.rotate(o.angle * Math.PI / 180);
+          //if (o.angle) this.ctx.rotate(o.angle * Math.PI / 180);
           //strokeText('Hello world!', 40, 50); 
           if (!o.hideStroke) this.ctx.strokeText(o.text, 0 - o.w * this.unit / 2, 0 - o.h * this.unit / 2);
           if (o.showFill) this.ctx.fillText(o.text, 0 - o.w * this.unit / 2, 0 - o.h * this.unit / 2);
@@ -334,15 +334,14 @@
         },
         drawImg: function(o) {
           //--------------------------------------------------------------------------------------------------------------------
-          this.ctx.scale(o.scaleX, o.scaleY);
           this.ctx.transform(o.m11, o.m12, o.m21, o.m22, o.dx, o.dy);
-          if (o.angle) this.ctx.rotate(o.angle * Math.PI / 180);
+          //if (o.angle) this.ctx.rotate(o.angle * Math.PI / 180);
           if (o.isReady) this.ctx.drawImage(o.img, 0 - o.w * this.unit / 2, 0 - o.h * this.unit / 2, o.w * this.unit, o.h * this.unit);
           return this;
         },
         drawPath: function(o) {
           //--------------------------------------------------------------------------------------------------------------------
-          if (o.angle) this.ctx.rotate(o.angle * Math.PI / 180);
+         // if (o.angle) this.ctx.rotate(o.angle * Math.PI / 180);
           var that = this;
           this.ctx.beginPath();
           $.each(o.points, function(i, p) {
@@ -388,14 +387,10 @@
         },
         drawLayer: function(o) {
           //--------------------------------------------------------------------------------------------------------------------
-          this.ctx.scale(o.scaleX, o.scaleY);
-          if (o.angle) this.ctx.rotate(o.angle * Math.PI / 180);
-          this.ctx.translate(-(this.x + o.x) * this.unit, -this.height + (this.y + o.y) * this.unit);
+          //nullifying the scalling and translattion in reverse order
+          // this.ctx.rotate(-o.angle * Math.PI / 180);
+          this.ctx.translate(-(this.x) * this.unit, -this.height + (this.y) * this.unit);
           var that = this;
-          var options = $.extend({}, o);
-          options.angle = 0;
-          this.draw('Rectangle', options);
-          this.ctx.translate(o.x * this.unit, -o.y * this.unit);
           $.each(o.items, function(i, item) {
             that.draw(item);
           });
@@ -439,6 +434,7 @@
             if (p) {
               this.x = p.x;
               this.y = p.y;
+              return this;
             } else {
               return {
                 x: this.x,
@@ -459,11 +455,17 @@
             return this;
           };
 
-
+          this.rotate = function(angle){
+           
+            this.angle = angle;
+            return this;
+          };
+          
           this.removeShadow = function() {
             this.shadowOffsetX = 0;
             this.shadowOffsetY = 0;
             this.shadowBlur = 0;
+            return this;
           };
         };
 
@@ -487,7 +489,7 @@
           this.dType = 'Line';
           this.type = 'defalut'; //polar          
           this.r = 1;
-          this.angle = -45;
+          this.theta = -45;
           this.x2 = 1;
           this.y2 = 1;
 
@@ -506,8 +508,8 @@
           //update convers polar to cartisian
           this.update = function() {
             if (this.type == 'polar') {
-              this.x2 = this.x + this.r * Math.cos(mathUtil.getRad(this.angle));
-              this.y2 = this.y + this.r * Math.sin(mathUtil.getRad(this.angle));
+              this.x2 = this.x + this.r * Math.cos(mathUtil.getRad(this.theta));
+              this.y2 = this.y + this.r * Math.sin(mathUtil.getRad(this.theta));
             }
           };
         };
@@ -690,10 +692,12 @@
             boxObject.removeShadow();
           }
           var options = (typeof boxObject === "string") ? settings : $.extend($.extend({}, boxObject), settings);
+          delete options.rotate;delete options.scale;delete options.translate;
           this.ctx.save();
           this.ctx = $.extend(this.ctx, options);
           this.ctx.translate((this.x + options.x) * this.unit, this.height - (this.y + options.y) * this.unit);
-
+	        this.ctx.scale(options.scaleX, options.scaleY);
+	        this.ctx.rotate(options.angle * Math.PI / 180);
           ObjectDispatcher[boxObject.dType || boxObject][1].call(this, options);
           this.ctx.restore();
         }

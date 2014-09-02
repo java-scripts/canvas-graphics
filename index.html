@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0059)http://getbootstrap.com/2.3.2/getting-started.html#examples -->
 <html lang="en">
-
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
@@ -618,19 +616,21 @@ g.loop(function(t){
           <div class="tab-content">
             <div class="tab-pane active" id="code4">
               <pre class="prettyprint linenums">
+
 /*creating all necessary objects to creat a piston*/
 var c = g.create('Circle',{y:-1,r:0.5});	 
 var l1 = g.create('Line',{type:'polar',y:-1,r:0.5});	  
 var l2 = g.create('Line',{x2:0,r:2});
 var r = g.create('Rectangle',{x:0,w:2,h:1,showFill:true});	  
+var r2= g.create('Rectangle',{x:0,y:0,w:2,h:4.5});
 var s1 = g.create('Sphere',{r:0.2});
 var s2 = g.create('Sphere',{r:0.2});
 
 /*create a layer to contain all the piston parts*/
 var layer = g.create('Layer',{w:2,h:5,scaleX:1,scaleY:1});
-layer.add(c).add(s1).add(s2).add(l1).add(l2).add(r);
+layer.add(c).add(s1).add(s2).add(l1).add(l2).add(r).add(r2);
 
-g.loop(function(t){			
+lid=g.loop(function(t){			
 	g.clear();						
 	var phase = t*5;				
 	buildPiston(phase,2.5);				
@@ -641,13 +641,13 @@ g.loop(function(t){
 
 /* drawing the piston for the given phase angle and at position x on the grid*/	
 function buildPiston(phase,x){
-	l1.angle=phase;	
+	l1.theta=phase;	
 	s1.position(l1.position2());
 	l2.position(l1.position2());			
 	l2.y2 = Math.sqrt(l2.r*l2.r-(l2.x2-l2.x)*(l2.x2-l2.x))+l2.y;
 	s2.position(l2.position2());			
 	r.y = l2.y2;				
-	layer.x=x;layer.y=4;/* translate the whole layer to the position x,y*/		
+	layer.x=x;layer.y=4;/* translate the whole layer to the position x,y*/			
 	g.draw(layer);	
 }
 </pre>
