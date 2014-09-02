@@ -583,12 +583,9 @@ g.drawArray([line,polarLine,sphere]);
 var rect = g.create('Rectangle',{vx:5,vy:2.3,strokeStyle:'red'});
 
 /* Creating a time loop */
-g.loop(function(t){
-	/* rotate rectale in time*/
-	rect.angle = t/2; 
-	
+g.loop(function(t){	
 	/* draw the rectanle as well as update its position */
-	g.draw(rect.move());
+	g.draw(rect.rotate(t/2).move());
 
 });
 </pre>
