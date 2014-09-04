@@ -103,7 +103,64 @@
       h /= 6;
     }
     return [h, s, v];
-  }
+  },
+  settings:{
+	color:{
+		gamma:1,hue:1,saturation:1,intensity:1,modal:'wave'
+	}
+  },
+  setColorSettings:function(settings){
+	$.extend(this.settings.color,settings);
+  },
+  getColor:function(E){
+	 //color gamma adjustment
+	 var settings=this.settings.color;
+    E *= settings.gamma;	
+	//colormodel	
+	var rgb = this.colorModel[settings.modal].call(this,E);
+	
+	 //color adjustments
+   // var hsv = this.rgbToHsv(rgb[0],rgb[1],rgb[2]);
+    //hue adjustment
+   // hsv[0] = (hsv[0] + settings.hue) % 1;
+   // hsv[1] = (hsv[1] + settings.saturation) % 1;
+   // hsv[2] = hsv[2] * settings.intensity;
+
+   // var rgb = this.hsvToRgb(hsv[0],hsv[1],hsv[2]);	
+	return this.getColorFromArray(rgb);
+  },
+  colorModel:{		
+	 wave: function(k) {
+		if (k > 1) k = 1;else if (k < -1) k = -1;k=Math.abs((k + 1) / 2); 
+		var rr = this.hsvToRgb(k, 1, 1);
+		var gg = this.hsvToRgb(1, k, 1);
+		var bb = this.hsvToRgb(1, 1, k);
+		return [rr[0], gg[1], bb[2]];
+	  },
+	  sand: function(k) {
+		if (k > 1) k = 1;else if (k < -1) k = -1;k=Math.abs((k + 1) / 2);		
+		return this.hsvToRgb(k+0.6, 0.1, k+0.2);
+	  },
+	  plane: function(E) {			
+		if (E > 1) E = 1;else if (E < -1) E = -1;
+		if (E > 0) {
+		  return [Math.round(E * 255), 0, 0];
+		} else {
+		  return [0, 0, Math.round(E * -255)];
+		}
+
+	  },
+	  binary: function(E) {
+		if (E > 0) {
+		  return [255, 0, 0];
+		} else {
+		  return [0, 0, 255];
+		}
+	  }
+  },
+ 
+  
+  
 };
 
   GUtil = {
@@ -249,10 +306,11 @@
           renderCallback(this.counter++);
         },
         timeOutLoop: function(renderCallback, time, loopId) {
+		  var that = this;
           requestId = window.setTimeout(function() {
-            loopUtil.timeOutLoop.call(this, renderCallback, time, loopId);
+            loopUtil.timeOutLoop.call(that, renderCallback, time, loopId);
           }, time);
-          loopUtil.pushRequest(loopId, requestId);
+          loopUtil.pushRequest(loopId, requestId);		  
           renderCallback(this.counter++);
         }
 
@@ -291,6 +349,29 @@
           if (o.showFill) this.ctx.fillRect(0 - o.w * this.unit / 2, 0 - o.h * this.unit / 2, o.w * this.unit, o.h * this.unit);
           return this;
         },
+		drawMatrix:function(o){			
+			GUtil.Color.setColorSettings(o.color);			
+			var sx = o.w/o.m;
+			var sy = o.h/o.n;			
+			this.ctx.strokeRect(0 - o.w * this.unit / 2, 0 - o.h * this.unit / 2, o.w * this.unit, o.h * this.unit);
+			if(o.color.fillType=='text'){
+				for(var i=0;i<o.m;i++){
+					for(j=0;j<o.n;j++){					
+						this.ctx.fillStyle=GUtil.Color.getColor(o.data[i][j]);					
+						this.ctx.fillText(parseFloat(o.data[i][j]).toFixed(2), (i+0.25)*sx*this.unit - o.w * this.unit / 2, (j+0.75)*sy*this.unit - o.h * this.unit / 2);
+					}
+				}
+			}else{
+				for(var i=0;i<o.m;i++){
+					for(j=0;j<o.n;j++){					
+						this.ctx.fillStyle=GUtil.Color.getColor(o.data[i][j]);
+						this.ctx.fillRect(i*sx*this.unit - o.w * this.unit / 2, j*sy*this.unit - o.h * this.unit / 2, sx * this.unit, sy * this.unit);					
+					}
+				}	
+			}
+			
+			
+		},
         drawCircle: function(o) {
           //--------------------------------------------------------------------------------------------------------------------
           this.ctx.beginPath();
@@ -394,7 +475,7 @@
           $.each(o.items, function(i, item) {
             that.draw(item);
           });
-        }
+        }		
       };
 
       var objectUtil = {};
@@ -414,7 +495,7 @@
           this.fillStyle = 'rgba(0,0,0,0.2)';
           this.strokeStyle = 'rgba(0,0,0,0.5)';
           //dropShadow
-          this.dropShadow = true;
+          this.dropShadow = false;
           this.shadowColor = "black";
           this.shadowOffsetX = 5;
           this.shadowOffsetY = 5;
@@ -549,8 +630,26 @@
 
         };
         Img.prototype = new Box2d();
-
-
+	//--------------------------------------------------------------------------------------------------------------------
+		var Matrix = function(options){
+			this.dType = 'Matrix';
+			var settings = $.extend({m:10,n:10},options);						
+			this.m=settings.m;
+			this.n=settings.n;
+			this.data=[];			
+			this.reset=function(){
+				for(var i=0;i<this.m;i++){
+					this.data[i]=[];
+					for(var j=0;j<this.n;j++){
+						this.data[i][j]=0;
+					}
+				}
+			}		
+			this.color={};			
+			this.reset();
+		}
+		 Matrix.prototype = new Box2d();		
+		//--------------------------------------------------------------------------------------------------------------------
         var Path = function() {
           this.dType = 'Path';
           this.points = [];
@@ -577,7 +676,7 @@
         };
 
         Path.prototype = new Box2d();
-
+		
 
 
         //--------------------------------------------------------------------------------------------------------------------
@@ -650,7 +749,8 @@
           Img: Img,
           Path: Path,
           Tracer: Tracer,
-          Layer: Layer
+          Layer: Layer,
+		  Matrix:Matrix
 
         };
       }()); //objectUtil
@@ -669,9 +769,10 @@
         Tracer: [objectUtil.Tracer, drawingUtil.drawTracer],
         Layer: [objectUtil.Layer, drawingUtil.drawLayer],
         Img: [objectUtil.Img, drawingUtil.drawImg],
+		Matrix:[objectUtil.Matrix, drawingUtil.drawMatrix],
         create: function(objectName, settings) {
           if (ObjectDispatcher[objectName]) {
-            var object = new ObjectDispatcher[objectName][0]();
+            var object = new ObjectDispatcher[objectName][0](settings);
             if (object.dType == 'Img') {
               Object.defineProperty(object, "src", {
                 set: function(src) {
