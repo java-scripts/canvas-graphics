@@ -89,14 +89,14 @@
           </li>
           <li class=""><a href="#logintudinalWave"><i class="icon-chevron-right"></i> Longitudinal Wave Formation</a>
           </li>
-          <li class=""><a href="#lissajous"><i class="icon-chevron-right"></i> Lissajous Pattern</a>
-          </li>
-        <li class="nav-header">Algorithm Visulaizations</li>
-            <li class=""><a href="#hanoi"><i class="icon-chevron-right"></i> TowersOfHanoi</a>
-          </li>
-           <li class="nav-header">Games</li>
-             <li class=""><a href="#snakeGame"><i class="icon-chevron-right"></i> Snake Game</a>
-          </li>
+          <li class=""><a href="#lissajous"><i class="icon-chevron-right"></i> Lissajous Pattern</a></li>          
+		  <li class="nav-header">2D Visulaizations</li>      
+			<li class=""><a href="#sinc2d"><i class="icon-chevron-right"></i> 2D Sinc</a></li> 
+		  
+		  <li class="nav-header">Games & Algorithms</li>
+          <li class=""><a href="#snakeGame"><i class="icon-chevron-right"></i> Snake Game</a></li>			
+		  <li class=""><a href="#hanoi"><i class="icon-chevron-right"></i> TowersOfHanoi</a></li>
+			
         </ul>
       </div>
       <div class="span9">
@@ -793,90 +793,72 @@ g.loop(function(t){
 
 
 
-
-        <!--	 ================================================== -->
-        <section id="hanoi">
+		 <!--	 ================================================== -->
+        <section id="sinc2d">
           <div class="page-header">
-            <h1>TowersOfHanoi</h1>
+            <h1>2D Sinc</h1>
           </div>
           <ul class="nav nav-tabs custom-nav-tabs">
-            <li class="active"><a href="#hanoiCode">Code</a>
+            <li class="active"><a href="#sinc2dCode">Code</a>
             </li>
-            <li><a href="#hanoiResult">Result</a>
+            <li><a href="#sinc2dResult">Result</a>
             </li>
           </ul>
 
           <div class="tab-content">
-            <div class="tab-pane active" id="hanoiCode">
+            <div class="tab-pane active" id="sinc2dCode">
               <pre class="prettyprint linenums">
-/* */
-g.x=6;g.y=1;		
-var n=5; 
-var delay=300;
-var poleA = {name:"A",x:-3,y:0,disks:[]};
-var poleB = {name:"B",x:0,y:0,disks:[]};
-var poleC = {name:"C",x:3,y:0,disks:[]};		
 
-poles={A:poleA,B:poleB,C:poleC};
+/*Init graphis*/
+g = GUtil.createGraphis({target: '#canvas',color:'black'});
 
-function draw(){
-	g.clear();
-	$.each(poles,function(k,pole){
-		var h=0.3;var y=-h;
-		g.draw('Rectangle',{x:pole.x,y:pole.y+1,w:0.1,h:2,showFill:true,fillStyle:'black'});
-		$.each(pole.disks,function(i,disk){						
-			g.draw('Rectangle',{
-				h:h,
-				y:y+=h,
-				w:disk.w,
-				x:pole.x,
-				showFill:true,
-				strokeStyle:'black',
-				fillStyle:disk.fillStyle,					
-			});
-			
-		});		
-	});				
-}
+/*Creating Matrix with dimensions mxn */
+mat = g.create('Matrix',{m:20,n:20,color:{gamma:5}});
+
+g.loop(function(t){
+	g.clear();	
+	var r=1;
+	/*setting time varying data for 2d Sinc*/
 	
-for(var i=n;i>0;i--){			  
-	var w = GUtil.Math.getlineMap(i,0,n,0.2,3);					
-	var rect = g.create('Rectangle',{w:w,showFill:true,fillStyle:GUtil.Color.getRandColor()});
-	poleA.disks.push(rect);
-}
-
-hanoiRecorder=[];	
-function hanoi(n, from , other, to) {		
-		if(n>0){
-			hanoi(n-1, from, to, other);				
-				hanoiRecorder.push({n:n,from:from,to:to});
-			hanoi(n-1, other, from, to);					
-		}	
-}
-hanoi(n,'A','B','C');		
-
-function render(){
-	var record = hanoiRecorder.shift();
-	if(record){		
-		g.clear();		
-		var from = poles[record.from].disks;
-		var to= poles[record.to].disks;
-		to.push(from.pop());
-		draw();
+	for(var x=0;x&ltmat.m;x++){
+		for(var y=0;y&ltmat.n;y++){
+			r=radius(x-mat.m/2,y-mat.n/2);
+			mat.data[x][y]=Math.sin(r-t/2)/r;
+		}
+	}	
+	
+	/*Plotting the data as text*/
+	mat.x=5.5;mat.y=4.5;mat.w=12;mat.h=8;mat.color.fillType = 'text';mat.color.modal='sand';
+	g.draw(mat);
+	
+	/*Plotting the data*/
+	mat.x=10.25;mat.y=2;mat.w=3;mat.h=2;mat.color.fillType='none';mat.color.modal='sand';
+	g.draw(mat);
+	
+	/*Plotting the data*/
+	mat.x=10.25;mat.y=4.25;mat.w=3;mat.h=2;mat.color.fillType='none';mat.color.modal='plane';
+	g.draw(mat);
+	
+	/*Plotting the data*/
+	mat.x=10.25;mat.y=6.5;mat.w=3;mat.h=2;mat.color.fillType='none';mat.color.modal='wave';
+	g.draw(mat);
 		
-		
-		window.setTimeout(render,delay);
-	}				
-}
+},100);
 
-draw();window.setTimeout(render,delay);
+/*radius function*/
+function radius(x,y){
+	return Math.sqrt(x*x+y*y)
+}
 </pre>
             </div>
-            <div class="tab-pane" id="hanoiResult">
+            <div class="tab-pane" id="sinc2dResult">
             </div>
           </div>
         </section>
+		
+		
 
+        
 
 
 
@@ -983,6 +965,88 @@ GUtil.KeyEvents.onKeyEvent('keydown', {
         </section>
 
 
+<!--	 ================================================== -->
+        <section id="hanoi">
+          <div class="page-header">
+            <h1>TowersOfHanoi</h1>
+          </div>
+          <ul class="nav nav-tabs custom-nav-tabs">
+            <li class="active"><a href="#hanoiCode">Code</a>
+            </li>
+            <li><a href="#hanoiResult">Result</a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div class="tab-pane active" id="hanoiCode">
+              <pre class="prettyprint linenums">
+/* */
+g.x=6;g.y=1;		
+var n=5; 
+var delay=300;
+var poleA = {name:"A",x:-3,y:0,disks:[]};
+var poleB = {name:"B",x:0,y:0,disks:[]};
+var poleC = {name:"C",x:3,y:0,disks:[]};		
+
+poles={A:poleA,B:poleB,C:poleC};
+
+function draw(){
+	g.clear();
+	$.each(poles,function(k,pole){
+		var h=0.3;var y=-h;
+		g.draw('Rectangle',{x:pole.x,y:pole.y+1,w:0.1,h:2,showFill:true,fillStyle:'black'});
+		$.each(pole.disks,function(i,disk){						
+			g.draw('Rectangle',{
+				h:h,
+				y:y+=h,
+				w:disk.w,
+				x:pole.x,
+				showFill:true,
+				strokeStyle:'black',
+				fillStyle:disk.fillStyle,					
+			});
+			
+		});		
+	});				
+}
+	
+for(var i=n;i>0;i--){			  
+	var w = GUtil.Math.getlineMap(i,0,n,0.2,3);					
+	var rect = g.create('Rectangle',{w:w,showFill:true,fillStyle:GUtil.Color.getRandColor()});
+	poleA.disks.push(rect);
+}
+
+hanoiRecorder=[];	
+function hanoi(n, from , other, to) {		
+		if(n>0){
+			hanoi(n-1, from, to, other);				
+				hanoiRecorder.push({n:n,from:from,to:to});
+			hanoi(n-1, other, from, to);					
+		}	
+}
+hanoi(n,'A','B','C');		
+
+function render(){
+	var record = hanoiRecorder.shift();
+	if(record){		
+		g.clear();		
+		var from = poles[record.from].disks;
+		var to= poles[record.to].disks;
+		to.push(from.pop());
+		draw();
+		
+		
+		window.setTimeout(render,delay);
+	}				
+}
+
+draw();window.setTimeout(render,delay);
+</pre>
+            </div>
+            <div class="tab-pane" id="hanoiResult">
+            </div>
+          </div>
+        </section>
 
 
 
@@ -1017,7 +1081,7 @@ GUtil.KeyEvents.onKeyEvent('keydown', {
     ================================================== -->
   <footer class="footer">
     <div class="container">
-      <p>All other project can be seen <a href="https://saratsivam.github.io/" target="_blank">here.</a>
+      <p>All other project can be seen <a href="https://java-scripts.github.io/" target="_blank">here.</a>		
       </p>
     </div>
   </footer>
