@@ -91,8 +91,7 @@
           </li>
           <li class=""><a href="#lissajous"><i class="icon-chevron-right"></i> Lissajous Pattern</a></li>          
 		  <li class="nav-header">2D Visulaizations</li>      
-			<li class=""><a href="#sinc2d"><i class="icon-chevron-right"></i> 2D Sinc</a></li> 
-		  
+		  <li class=""><a href="#sinc2d"><i class="icon-chevron-right"></i> 2D Sinc</a></li> 		  
 		  <li class="nav-header">Games & Algorithms</li>
           <li class=""><a href="#snakeGame"><i class="icon-chevron-right"></i> Snake Game</a></li>			
 		  <li class=""><a href="#hanoi"><i class="icon-chevron-right"></i> TowersOfHanoi</a></li>
@@ -415,17 +414,18 @@ g.draw(rect);
 		<div class="tab-pane active" id="code2">
 			<pre class="prettyprint">
 
-var rect = g.create('Rectangle',{x:2,y:3,strokeStyle:'green'});
-var circle = g.create('Circle',{x:3,y:1.5, r:1, fillStyle:'yellow',showFill:true});
-var line = g.create('Line',{x:1,y:2,x2:5,y2:3,strokeStyle:'blue'});
-var polarLine = g.create('Line',{type:'polar',x:4,y:4,r:3,angle:45,strokeStyle:'red'});
-var sphere = g.create('Sphere',{x:6,y:2,r:0.5,color:'blue'});
+var rect = g.create('Rectangle',{x:1,y:3,strokeStyle:'green'});
+var line = g.create('Line',{x:1,y:2,x2:5,y2:3,strokeStyle:'blue',dropShadow:true});
+var polarLine = g.create('Line',{type:'polar',x:2,y:1,r:3,theta:45,strokeStyle:'magenta'});
+var sphere = g.create('Sphere',{x:6,y:2,r:0.5,color:'blue',dropShadow:true});
+var circle = g.create('Circle',{x:3,y:4, r:1, fillStyle:'rgba(255,0,0,0.5)',showFill:true,dropShadow:true,shadowOffsetX:15,shadowOffsetY:15,shadowBlur:15,shadowColor:'red'});
+
 
 /* method chaining */
-g.draw(rect).draw(circle);
+g.draw(rect).draw(line);
 
 /* drawArray*/
-g.drawArray([line,polarLine,sphere]);
+g.drawArray([polarLine,sphere,circle]);
 			</pre>
 		</div>
 		<div class="tab-pane" id="result2">
@@ -580,7 +580,7 @@ g.drawArray([line,polarLine,sphere]);
             <div class="tab-pane active" id="code3">
               <pre class="prettyprint linenums">
 /* Create an object instace with vx, vy being the components of velocities */
-var rect = g.create('Rectangle',{vx:5,vy:2.3,strokeStyle:'red'});
+var rect = g.create('Rectangle',{vx:5,vy:2.3,strokeStyle:'red',dropShadow:true});
 
 /* Creating a time loop */
 g.loop(function(t){	
@@ -769,9 +769,9 @@ g.x=6;g.y=4;g.color="#000";
 var fx = 1.003;
 var fy=GUtil.Math.getRand(1,3)+GUtil.Math.getRand(0,1)/2;
 var n=0;var dt=0.01;var fi=0.01;
-var settings = {lineWidth:5,shadowColor:'#ff00ff',shadowOffsetX:0,shadowOffsetY:0,shadowBlur:30,strokeStyle:'white'};		
+var settings = {lineWidth:5,dropShadow:true,shadowColor:'#ff00ff',shadowOffsetX:0,shadowOffsetY:0,shadowBlur:30,strokeStyle:'white'};		
 var path = g.create('Path',settings);
-var sphere = g.create('Sphere',{r:0.2,x:0,y:0,color:'orange'});  	
+
 g.loop(function(t){  		
 	fi=fi+0.01;	
 	g.clear();path.clear();			
