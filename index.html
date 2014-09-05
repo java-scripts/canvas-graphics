@@ -882,11 +882,11 @@ function radius(x,y){
  
 g.x=0,g.y=0;g.clearLoops();
 var v=5;var speedIncr=0.5;
-var gameOver = g.create('Text',{text:'Game Over',x:3,y:6,font:'Bold 50px Sans-Serif',showFill:true,fillStyle:'red'});
-var msg = g.create('Text',{text:'',x:1,y:6,font:'Bold 25px Sans-Serif',showFill:true,fillStyle:'red'});
-var scoreText = g.create('Text',{text:'score: 0',x:10.5,y:7,font:'20px Sans-Serif',showFill:true,fillStyle:'blue',dropShadow:false});
-var snake= g.create('Tracer',{x:0,y:3,vx:v,vy:0,lineWidth:10,strokeStyle:'green',length:25,defaultLength:25,nodeLength:0.10});
-var head= g.create('Rectangle',{w:0.3,h:0.3,angle:45,showFill:true,fillStyle:'yellow'});
+var gameOver = g.create('Text',{text:'Game Over',x:3,y:6,font:'Bold 50px Sans-Serif',showFill:true,fillStyle:'red',dropShadow:true});
+var msg = g.create('Text',{text:'',x:1,y:6,font:'Bold 25px Sans-Serif',showFill:true,fillStyle:'red',dropShadow:true});
+var scoreText = g.create('Text',{text:'score: 0',x:10.5,y:7,font:'20px Sans-Serif',showFill:true,fillStyle:'blue'});
+var snake= g.create('Tracer',{x:0,y:3,vx:v,vy:0,lineWidth:10,strokeStyle:'green',length:25,defaultLength:25,nodeLength:0.10,dropShadow:true});
+var head= g.create('Rectangle',{w:0.3,h:0.3,angle:45,showFill:true,fillStyle:'yellow',dropShadow:true}); 
  
  
 snake.head=head;
@@ -932,7 +932,7 @@ g.drawArray([food,snake,scoreText]);
  msg.text="GameControls:	up:W, down:S, left:A, right:D;";
  g.draw(msg);
  msg.fillStyle='yellow';
- msg.y-=1; msg.text = 'Press Spacebar to start';g.draw(msg);
+ msg.y-=1; msg.text = 'Press P to start';g.draw(msg);
  
  
 GUtil.KeyEvents.onKeyEvent('keydown', {
@@ -952,7 +952,7 @@ GUtil.KeyEvents.onKeyEvent('keydown', {
     snake.vx = 0;
     if (snake.vy == 0) snake.vy = -v;
   },
-  spacebar: function(e) {
+  P: function(e) {
     g.toggleLoop(loopId);
   }
 }); 
