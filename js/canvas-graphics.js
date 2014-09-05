@@ -192,8 +192,9 @@
         x: 0,
         y: 0,
         showGrid: false,
+		items:[],
         clear: function() {
-          drawingUtil.clear.call(this, null);
+          return drawingUtil.clear.call(this, null),this;
         },
         center: function(c) {
           if (c) {
@@ -209,9 +210,30 @@
         create: function(objectName, settings) {
           return ObjectDispatcher.create(objectName, settings);
         },
-        draw: function(boxObject, settings) {
-          return ObjectDispatcher.draw.call(this, boxObject, settings), this;
+		destroy:function(xItem){			
+			var index = this.items.indexOf(xItem);
+			if(index >= 0){
+				this.items.splice(index,1);
+			}
+			return this;
+		},
+		refresh:function(){
+			return this.clear().draw();
+		},
+        draw: function(boxObject, settings) {			
+			if(boxObject){
+				return this.drawItem(boxObject, settings);
+			}else{
+				for(var key in this.items){
+					this.drawItem(this.items[key]);					
+				}
+				return this;
+			}
+			
         },
+		drawItem:function(boxObject,settings){
+			 return ObjectDispatcher.draw.call(this, boxObject, settings), this;
+		},
         drawArray: function(boxObjects, settings) {
           var that = this;
           $.each(boxObjects, function(i, boxObject) {
@@ -439,6 +461,10 @@
             this.ctx.stroke();
             this.ctx.closePath();
           }
+		  if(o.showFrame){
+			this.ctx.fillStyle='rgba(150,150,150,0.1)';
+			this.ctx.fillRect(0 - o.w * this.unit / 2, 0 - o.h * this.unit / 2, o.w * this.unit, o.h * this.unit);
+		  }
           return this;
         },
         drawTracer: function(o) {
@@ -523,7 +549,18 @@
               };
             }
           };
-
+		
+		  this.isInside = function(p){
+			if(this.x-this.w/2 <= p.x && p.x <= this.x+this.w/2){
+				if(this.y-this.h/2 <= p.y && p.y <= this.y+this.h/2){
+					return true;
+				}
+			}
+			return false;
+		  };
+		  
+		  
+		
           this.move = function() {
             this.x += this.vx * this.dt;
             this.y += this.vy * this.dt;
@@ -536,8 +573,7 @@
             return this;
           };
 
-          this.rotate = function(angle){
-           
+          this.rotate = function(angle){           
             this.angle = angle;
             return this;
           };
@@ -654,7 +690,11 @@
           this.dType = 'Path';
           this.points = [];
           this.close = false;
+		  this.showFrame=false;
           this.add = function(x, y) {
+			if(2*x>this.w)this.w=2*x;
+			if(2*y>this.h)this.h=2*y;
+		  
             return this.points.push({
               x: x,
               y: y
@@ -780,7 +820,9 @@
                 }
               });
             }
-            return $.extend(object, settings);
+			var newObject = $.extend(object, settings);
+			graphics.items.push(newObject);
+            return newObject;
           } else {
             throw new Error('No such object ' + objectName);
           }
