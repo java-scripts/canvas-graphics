@@ -11,7 +11,7 @@ function DragDrop(g){
 			}	
 		
 		}
-		var eventRegister={itemFound:false, item:null, direction:null,nextEventToFire:undefined,prevPos:{},nextPos:{}};
+		var eventRegister={item:null, direction:null,nextEventToFire:undefined,prevPos:{},nextPos:{}};
 		
 		function init(){
 				
@@ -23,7 +23,7 @@ function DragDrop(g){
 			
 			$(this.canvas).on('c_mousedown',function(t,p){
 				eventRegister.prevPos=eventRegister.nextPos;
-				if(eventRegister.itemFound){
+				if(eventRegister.item){
 					$(that.canvas).trigger('cg_mousedown',[eventRegister.item,p]);
 				}
 			}).on('c_mouseup',function(t,p){
@@ -50,7 +50,7 @@ function DragDrop(g){
 					}
 					
 					g.refresh();
-				}else if(eventRegister.itemFound && eventRegister.item.drag){
+				}else if(eventRegister.item && eventRegister.item.drag){
 					//move item
 					eventRegister.nextEventToFire = 'cg_dragComplete'
 					eventRegister.item.position(p);
@@ -58,11 +58,11 @@ function DragDrop(g){
 				}else{
 					eventRegister.nextEventToFire = undefined;
 				}								
-			}).on('c_mousemove',function(t,p){			
-				eventRegister = geteventRegisterOnItem(p);				
+			}).on('c_mousemove',function(t,p){					
+				eventRegister = geteventRegisterOnItem(p);							
 				if(eventRegister.direction!=null && eventRegister.direction!='' && eventRegister.item.resize){					
 					$(that.canvas).css({cursor:eventRegister.direction+'-resize'});
-				}else if(eventRegister.itemFound && eventRegister.item.drag){
+				}else if(eventRegister.item && eventRegister.item.drag){
 					$(that.canvas).css({cursor:'move'});
 				}else{
 					$(that.canvas).css({cursor:'default'})
@@ -102,12 +102,13 @@ function DragDrop(g){
 		}		
 		
 		function geteventRegisterOnItem(p){			
-		
+					
+					eventRegister.item = null;
+					eventRegister.item = '';
 			var k=0.1;//edge thickness;
 			for(var key in container.items){
 				var item = container.items[key];
-				if(isInside(item,p)){
-					eventRegister.itemFound = true;
+				if(isInside(item,p)){					
 					eventRegister.item = item;
 					
 					var n=Math.abs(item.y+item.h/2-p.y)<=k?'n':'';
@@ -160,7 +161,6 @@ function DragDrop(g){
 		return container;
 
 }
-
 
 
 
