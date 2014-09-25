@@ -106,7 +106,7 @@
   },
   settings:{
 	color:{
-		gamma:1,hue:1,saturation:1,intensity:1,modal:'wave'
+		gamma:1,hue:0,saturation:0,intensity:1,modal:'wave'
 	}
   },
   setColorSettings:function(settings){
