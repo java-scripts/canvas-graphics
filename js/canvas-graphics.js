@@ -113,20 +113,18 @@
 	$.extend(this.settings.color,settings);
   },
   getColor:function(E){
-	 //color gamma adjustment
+ 	//color gamma adjustment
 	 var settings=this.settings.color;
-    E *= settings.gamma;	
+    	E *= settings.gamma;	
 	//colormodel	
 	var rgb = this.colorModel[settings.modal].call(this,E);
 	
 	 //color adjustments
-   // var hsv = this.rgbToHsv(rgb[0],rgb[1],rgb[2]);
-    //hue adjustment
-   // hsv[0] = (hsv[0] + settings.hue) % 1;
-   // hsv[1] = (hsv[1] + settings.saturation) % 1;
-   // hsv[2] = hsv[2] * settings.intensity;
-
-   // var rgb = this.hsvToRgb(hsv[0],hsv[1],hsv[2]);	
+    var hsv = this.rgbToHsv(rgb[0],rgb[1],rgb[2]);    
+    hsv[0] = (hsv[0] + settings.hue) % 1;
+    hsv[1] =Math.min(1,(hsv[1] + settings.saturation));  
+    hsv[2] = hsv[2] * settings.intensity;
+    var rgb = this.hsvToRgb(hsv[0],hsv[1],hsv[2]);	
 	return this.getColorFromArray(rgb);
   },
   colorModel:{		
