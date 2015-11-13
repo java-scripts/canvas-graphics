@@ -1,16 +1,15 @@
-
 (function() {
   var events = {
     keyCodes:{0: 48, 1: 49, 2: 50, 3: 51, 4: 52, 5: 53, 6: 54, 7: 55, 8: 56, 9: 57,A: 65, B: 66, C: 67, D: 68, E: 69, F: 70, G: 71, H: 72, I: 73, J: 74, K: 75, L: 76, M: 77, N: 78, O: 79, P: 80, Q: 81, R: 82, S: 83, T: 84, U: 85, V: 86, W: 87, X: 88, Y: 89, Z:90,enter:13, up:38, down:40, right:39, left:37, esc:27, spacebar:32, ctrl:17, alt:18, shift:16,tab:9,backspace:8},
     keyNames:{8: "backspace", 9: "tab", 13: "enter", 16: "shift", 17: "ctrl", 18: "alt", 27: "esc", 32: "spacebar", 37: "left", 38: "up", 39: "right", 40: "down", 48: "0", 49: "1", 50: "2", 51: "3", 52: "4", 53: "5", 54: "6", 55: "7", 56: "8", 57: "9", 65: "A", 66: "B", 67: "C", 68: "D", 69: "E", 70: "F", 71: "G", 72: "H", 73: "I", 74: "J", 75: "K", 76: "L", 77: "M", 78: "N", 79: "O", 80: "P", 81: "Q", 82: "R", 83: "S", 84: "T", 85: "U", 86: "V", 87: "W", 88: "X", 89: "Y", 90: "Z"},
     on: function(eventName, impl) {
     var that = this;
-      $(document).bind(eventName, function(e) {
+	  document.addEventListener(eventName, function(e) {
         var keyName = that.keyNames[e.keyCode];
         if (impl[keyName]) {
           impl[keyName](e);
         }
-      });
+      },false);
     }
   };
   
@@ -18,6 +17,12 @@
 	extend:function(dst,src){
 		for(var i in src){
 			dst[i]=src[i];
+		}
+		return dst;
+	},
+	each:function(list,iterator){
+		for(var i in list){
+			iterator(i,list[i]);
 		}
 	},
 	inherit:function(child, parent){
@@ -128,7 +133,7 @@
 	}
   },
   setColorSettings:function(settings){
-	$.extend(this.settings.color,settings);
+	util.extend(this.settings.color,settings);
   },
   getColor:function(E){
  	//color gamma adjustment
@@ -187,8 +192,8 @@ window.CG = {
         this.x = 0;
         this.y = 0;
         this.unit = 50;
-        $.extend(this, options);
-        this.canvas = $(this.target)[0];
+        util.extend(this, options);
+        this.canvas = document.querySelector('canvas');
         this.ctx = this.canvas.getContext('2d');
         this.width = this.canvas.width;
         this.height = this.canvas.height;
@@ -252,7 +257,7 @@ window.CG = {
 		},
         drawArray: function(boxObjects, settings) {
           var that = this;
-          $.each(boxObjects, function(i, boxObject) {
+          util.each(boxObjects, function(i, boxObject) {
             that.draw(boxObject, settings);
           });
           return this;
@@ -274,12 +279,7 @@ window.CG = {
         },
         clearLoops: function() {
           loopUtil.clearLoops();
-        },
-		extend:function(dst,src){
-			for(var i in src){
-				dst[i]=src[i];
-			}
-		}
+        }		
       }; //graphics
 
       var requestId = 0;
@@ -466,7 +466,7 @@ window.CG = {
          // if (o.angle) this.ctx.rotate(o.angle * Math.PI / 180);
           var that = this;
           this.ctx.beginPath();
-          $.each(o.points, function(i, p) {
+          util.each(o.points, function(i, p) {
             if (i === 0) {
               that.ctx.moveTo(p.x * that.unit, -p.y * that.unit);
             }
@@ -492,11 +492,11 @@ window.CG = {
           this.ctx.translate(-(this.x + o.x) * this.unit, -this.height + (this.y + o.y) * this.unit);
           var that = this;
           if (o.body) {
-            $.each(o.path.points, function(i, p) {
+            util.each(o.path.points, function(i, p) {
               that.draw(o.body, p);
             });
           } else {
-            var settings = $.extend(o, {
+            var settings = util.extend(o, {
               x: 0,
               y: 0,
               name: 'Path'
@@ -517,7 +517,7 @@ window.CG = {
           // this.ctx.rotate(-o.angle * Math.PI / 180);
           this.ctx.translate(-(this.x) * this.unit, -this.height + (this.y) * this.unit);
           var that = this;
-          $.each(o.items, function(i, item) {
+          util.each(o.items, function(i, item) {
             that.draw(item);
           });
         }		
@@ -735,7 +735,7 @@ window.CG = {
 		var Matrix = function(options){
 			//this.name = 'Matrix';
 			Box2d.call(this,'Matrix');
-			var settings = $.extend({m:10,n:10},options);						
+			var settings = util.extend({m:10,n:10},options);						
 			this.m=settings.m;
 			this.n=settings.n;
 			this.data=[];			
@@ -895,7 +895,7 @@ window.CG = {
                 }
               });
             }
-			var newObject = $.extend(object, settings);
+			var newObject = util.extend(object, settings);
 			graphics.items.push(newObject);
             return newObject;
           } else {
@@ -909,10 +909,10 @@ window.CG = {
           if (!boxObject.dropShadow && boxObject.removeShadow) {
             boxObject.removeShadow();
           }
-          var options = (typeof boxObject === "string") ? settings : $.extend($.extend({}, boxObject), settings);
+          var options = (typeof boxObject === "string") ? settings : util.extend(util.extend({}, boxObject), settings);
           delete options.rotate;delete options.scale;delete options.translate;
           this.ctx.save();
-          this.ctx = $.extend(this.ctx, options);
+          this.ctx = util.extend(this.ctx, options);
           this.ctx.translate((this.x + options.x) * this.unit, this.height - (this.y + options.y) * this.unit);
 	        this.ctx.scale(options.scaleX, options.scaleY);
 	        this.ctx.rotate(options.angle * Math.PI / 180);
