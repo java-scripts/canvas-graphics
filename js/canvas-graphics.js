@@ -1,11 +1,9 @@
-// Code goes here
-
 
 (function() {
-  var keyUtil = {
+  var events = {
     keyCodes:{0: 48, 1: 49, 2: 50, 3: 51, 4: 52, 5: 53, 6: 54, 7: 55, 8: 56, 9: 57,A: 65, B: 66, C: 67, D: 68, E: 69, F: 70, G: 71, H: 72, I: 73, J: 74, K: 75, L: 76, M: 77, N: 78, O: 79, P: 80, Q: 81, R: 82, S: 83, T: 84, U: 85, V: 86, W: 87, X: 88, Y: 89, Z:90,enter:13, up:38, down:40, right:39, left:37, esc:27, spacebar:32, ctrl:17, alt:18, shift:16,tab:9,backspace:8},
     keyNames:{8: "backspace", 9: "tab", 13: "enter", 16: "shift", 17: "ctrl", 18: "alt", 27: "esc", 32: "spacebar", 37: "left", 38: "up", 39: "right", 40: "down", 48: "0", 49: "1", 50: "2", 51: "3", 52: "4", 53: "5", 54: "6", 55: "7", 56: "8", 57: "9", 65: "A", 66: "B", 67: "C", 68: "D", 69: "E", 70: "F", 71: "G", 72: "H", 73: "I", 74: "J", 75: "K", 76: "L", 77: "M", 78: "N", 79: "O", 80: "P", 81: "Q", 82: "R", 83: "S", 84: "T", 85: "U", 86: "V", 87: "W", 88: "X", 89: "Y", 90: "Z"},
-    onKeyEvent: function(eventName, impl) {
+    on: function(eventName, impl) {
     var that = this;
       $(document).bind(eventName, function(e) {
         var keyName = that.keyNames[e.keyCode];
@@ -16,7 +14,21 @@
     }
   };
   
-  var mathUtil = {
+  var util={
+	extend:function(dst,src){
+		for(var i in src){
+			dst[i]=src[i];
+		}
+	},
+	inherit:function(child, parent){
+		child.prototype = Object.create(parent.prototype);
+		child.prototype.constructor = child;
+	},
+	noop:function(){
+	}  
+  };
+  
+  var math = {
   distance: function(p1, p2) {
     return Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
   },
@@ -36,9 +48,9 @@
   }
 };
 
-  var colorUtil = {
+  var color = {
   getRandColor: function() {
-    return this.getColorFromArray([mathUtil.getRand(0, 255), mathUtil.getRand(0, 255), mathUtil.getRand(0, 255)]);
+    return this.getColorFromArray([math.getRand(0, 255), math.getRand(0, 255), math.getRand(0, 255)]);
   },
   getColorFromArray: function(a) {
     return 'rgb(' + a[0] + ',' + a[1] + ',' + a[2] + ')';
@@ -161,7 +173,7 @@
   
 };
 
-  GUtil = {
+window.CG = {
     createGraphis: function(options) {
 
       var init = function(options) {
@@ -192,7 +204,7 @@
         showGrid: false,
 		items:[],
         clear: function() {
-          return drawingUtil.clear.call(this, null),this;
+          return drawUtil.clear.call(this, null),this;
         },
         center: function(c) {
           if (c) {
@@ -256,7 +268,12 @@
         },
         clearLoops: function() {
           loopUtil.clearLoops();
-        }
+        },
+		extend:function(dst,src){
+			for(var i in src){
+				dst[i]=src[i];
+			}
+		}
       }; //graphics
 
       var requestId = 0;
@@ -338,12 +355,12 @@
       //objectUtil.js contents should be loaded here  
 
 
-      var drawingUtil = {
+      var drawUtil = {
         clear: function() {
           this.ctx.fillStyle = this.color;
           this.ctx.fillRect(0, 0, this.width, this.height);
           this.ctx.fill();
-          if (this.showGrid) drawingUtil.drawGrid.call(this);
+          if (this.showGrid) drawUtil.drawGrid.call(this);
         },
         drawGrid: function() {
           this.ctx.strokeStyle = this.gridColor;
@@ -370,27 +387,25 @@
           return this;
         },
 		drawMatrix:function(o){			
-			GUtil.Color.setColorSettings(o.color);			
+			CG.Color.setColorSettings(o.color);			
 			var sx = o.w/o.m;
 			var sy = o.h/o.n;			
 			this.ctx.strokeRect(0 - o.w * this.unit / 2, 0 - o.h * this.unit / 2, o.w * this.unit, o.h * this.unit);
 			if(o.color.fillType=='text'){
 				for(var i=0;i<o.m;i++){
 					for(j=0;j<o.n;j++){					
-						this.ctx.fillStyle=GUtil.Color.getColor(o.data[i][j]);					
+						this.ctx.fillStyle=CG.Color.getColor(o.data[i][j]);					
 						this.ctx.fillText(parseFloat(o.data[i][j]).toFixed(2), (i+0.25)*sx*this.unit - o.w * this.unit / 2, (j+0.75)*sy*this.unit - o.h * this.unit / 2);
 					}
 				}
 			}else{
 				for(var i=0;i<o.m;i++){
 					for(j=0;j<o.n;j++){					
-						this.ctx.fillStyle=GUtil.Color.getColor(o.data[i][j]);
+						this.ctx.fillStyle=CG.Color.getColor(o.data[i][j]);
 						this.ctx.fillRect(i*sx*this.unit - o.w * this.unit / 2, j*sy*this.unit - o.h * this.unit / 2, sx * this.unit, sy * this.unit);					
 					}
 				}	
-			}
-			
-			
+			}		
 		},
         drawCircle: function(o) {
           //--------------------------------------------------------------------------------------------------------------------
@@ -478,7 +493,7 @@
             var settings = $.extend(o, {
               x: 0,
               y: 0,
-              dType: 'Path'
+              name: 'Path'
             });
             this.draw(o.path, settings);
           }
@@ -504,7 +519,8 @@
 
       var objectUtil = {};
       (function() {
-        var Box2d = function() {
+        var Box2d = function(name) {
+		  this.name = name||'Box2d';
           this.x = 0;
           this.y = 0;
           this.vx = 1.5;
@@ -533,9 +549,15 @@
           this.m21 = 0;
           this.m22 = 1;
           this.dx = 0;
-          this.dy = 0;
-
-          this.position = function(p) {
+          this.dy = 0;          
+        };
+		
+		util.extend(Box2d.prototype,{
+			rotate:function(angle){           
+				this.angle = angle;
+				return this;
+			},
+			position:function(p) {
             if (p) {
               this.x = p.x;
               this.y = p.y;
@@ -546,20 +568,16 @@
                 y: this.y
               };
             }
-          };
-		
-		  this.isInside = function(p){
+          },		
+		  isInside:function(p){
 			if(this.x-this.w/2 <= p.x && p.x <= this.x+this.w/2){
 				if(this.y-this.h/2 <= p.y && p.y <= this.y+this.h/2){
 					return true;
 				}
 			}
 			return false;
-		  };
-		  
-		  
-		
-          this.move = function() {
+		  },
+		  move:function() {
             this.x += this.vx * this.dt;
             this.y += this.vy * this.dt;
             if (this.x > 12 || this.x < 0) {
@@ -569,39 +587,41 @@
               this.vy = -this.vy;
             }
             return this;
-          };
-
-          this.rotate = function(angle){           
-            this.angle = angle;
-            return this;
-          };
-          
-          this.removeShadow = function() {
+          },
+		  removeShadow:function() {
             this.shadowOffsetX = 0;
             this.shadowOffsetY = 0;
             this.shadowBlur = 0;
             return this;
-          };
-        };
+          }		
+		});
 
+		
+		
+		
         //--------------------------------------------------------------------------------------------------------------------
         //Rectangle
         var Rectangle = function() {
-          this.dType = 'Rectangle';
+          //this.name = 'Rectangle';
+		  Box2d.call(this,'Rectangle');
         };
-        Rectangle.prototype = new Box2d();
+		util.inherit(Rectangle, Box2d);		
+        //Rectangle.prototype = new Box2d();
 
         //--------------------------------------------------------------------------------------------------------------------
         //Circle
         var Circle = function() {
-          this.dType = 'Circle';
+          //this.name = 'Circle';
+		  Box2d.call(this,'Circle');
           this.r = 1;
         };
-        Circle.prototype = new Box2d();
+        //Circle.prototype = new Box2d();
+		util.inherit(Circle, Box2d);	
         //--------------------------------------------------------------------------------------------------------------------
         //Line
         var Line = function() {
-          this.dType = 'Line';
+          //this.name = 'Line';
+		  Box2d.call(this,'Line');
           this.type = 'defalut'; //polar          
           this.r = 1;
           this.theta = -45;
@@ -623,31 +643,37 @@
           //update convers polar to cartisian
           this.update = function() {
             if (this.type == 'polar') {
-              this.x2 = this.x + this.r * Math.cos(mathUtil.getRad(this.theta));
-              this.y2 = this.y + this.r * Math.sin(mathUtil.getRad(this.theta));
+              this.x2 = this.x + this.r * Math.cos(math.getRad(this.theta));
+              this.y2 = this.y + this.r * Math.sin(math.getRad(this.theta));
             }
           };
         };
-        Line.prototype = new Box2d();
+        //Line.prototype = new Box2d();
+		util.inherit(Line, Box2d);	
         //--------------------------------------------------------------------------------------------------------------------
         //Sphere
         var Sphere = function() {
-          this.dType = 'Sphere';
+          //this.name = 'Sphere';
+		  Box2d.call(this,'Sphere');
           this.r = 1;
           this.angle = 225;
           this.color = 'red';
         };
-        Sphere.prototype = new Box2d();
+        //Sphere.prototype = new Box2d();
+		util.inherit(Sphere, Box2d);	
         //--------------------------------------------------------------------------------------------------------------------
         var Text = function() {
-          this.dType = 'Text';
+          //this.name = 'Text';
+		  Box2d.call(this,'Text');
           this.text = 'Hellow';
           this.font = 'Bold 30px Sans-Serif';
         };
-        Text.prototype = new Box2d();
+        //Text.prototype = new Box2d();
+		util.inherit(Text, Box2d);	
         //--------------------------------------------------------------------------------------------------------------------
         var Img = function() {
-          this.dType = 'Img';
+          //this.name = 'Img';
+		  Box2d.call(this,'Img');
           this.img = new Image();
           this.src = null;
           this.isReady = false;
@@ -663,10 +689,12 @@
 
 
         };
-        Img.prototype = new Box2d();
+        //Img.prototype = new Box2d();
+		util.inherit(Img, Box2d);	
 	//--------------------------------------------------------------------------------------------------------------------
 		var Matrix = function(options){
-			this.dType = 'Matrix';
+			//this.name = 'Matrix';
+			Box2d.call(this,'Matrix');
 			var settings = $.extend({m:10,n:10},options);						
 			this.m=settings.m;
 			this.n=settings.n;
@@ -682,10 +710,12 @@
 			this.color={};			
 			this.reset();
 		}
-		 Matrix.prototype = new Box2d();		
+		 //Matrix.prototype = new Box2d();		
+		 util.inherit(Matrix, Box2d);
 		//--------------------------------------------------------------------------------------------------------------------
         var Path = function() {
-          this.dType = 'Path';
+          //this.name = 'Path';
+		  Box2d.call(this,'Path');
           this.points = [];
           this.close = false;
 		  this.showFrame=false;
@@ -713,13 +743,14 @@
 
         };
 
-        Path.prototype = new Box2d();
-		
+        //Path.prototype = new Box2d();
+		util.inherit(Path, Box2d);
 
 
         //--------------------------------------------------------------------------------------------------------------------
         var Tracer = function() {
-          this.dType = 'Tracer';
+          //this.name = 'Tracer';
+		  Box2d.call(this,'Tracer');
           this.length = 20; //number of points
           this.path = new Path();
           //new node is accepted only if distance(newnode,oldnode)>distance
@@ -755,15 +786,17 @@
 
           //attached to object so that to override externally
           this.accept = function(p1, p2) {
-            return mathUtil.distance(p1, p2) > this.nodeLength;
+            return math.distance(p1, p2) > this.nodeLength;
           };
         };
-        Tracer.prototype = new Box2d();
+        //Tracer.prototype = new Box2d();
+		util.inherit(Tracer, Box2d);
 
         //--------------------------------------------------------------------------------------------------------------------
         //to container group of objects
         var Layer = function() {
-          this.dType = 'Layer';
+          //this.name = 'Layer';
+		  Box2d.call(this,'Layer');
           this.items = [];
           this.x = 0;
           this.y = 0;
@@ -775,7 +808,11 @@
           };
 
         };
-        Layer.prototype = new Box2d();
+        //Layer.prototype = new Box2d();
+		util.inherit(Layer, Box2d);
+
+		
+		
         //--------------------------------------------------------------------------------------------------------------------
         objectUtil = {
           Box2d: Box2d,
@@ -798,20 +835,20 @@
 
       var ObjectDispatcher = {
         Box2d: [objectUtil.Box2d, ''],
-        Rectangle: [objectUtil.Rectangle, drawingUtil.drawRectangle],
-        Circle: [objectUtil.Circle, drawingUtil.drawCircle],
-        Line: [objectUtil.Line, drawingUtil.drawLine],
-        Sphere: [objectUtil.Sphere, drawingUtil.drawSphere],
-        Text: [objectUtil.Text, drawingUtil.drawText],
-        Path: [objectUtil.Path, drawingUtil.drawPath],
-        Tracer: [objectUtil.Tracer, drawingUtil.drawTracer],
-        Layer: [objectUtil.Layer, drawingUtil.drawLayer],
-        Img: [objectUtil.Img, drawingUtil.drawImg],
-		Matrix:[objectUtil.Matrix, drawingUtil.drawMatrix],
+        Rectangle: [objectUtil.Rectangle, drawUtil.drawRectangle],
+        Circle: [objectUtil.Circle, drawUtil.drawCircle],
+        Line: [objectUtil.Line, drawUtil.drawLine],
+        Sphere: [objectUtil.Sphere, drawUtil.drawSphere],
+        Text: [objectUtil.Text, drawUtil.drawText],
+        Path: [objectUtil.Path, drawUtil.drawPath],
+        Tracer: [objectUtil.Tracer, drawUtil.drawTracer],
+        Layer: [objectUtil.Layer, drawUtil.drawLayer],
+        Img: [objectUtil.Img, drawUtil.drawImg],
+		Matrix:[objectUtil.Matrix, drawUtil.drawMatrix],
         create: function(objectName, settings) {
           if (ObjectDispatcher[objectName]) {
             var object = new ObjectDispatcher[objectName][0](settings);
-            if (object.dType == 'Img') {
+            if (object.name == 'Img') {
               Object.defineProperty(object, "src", {
                 set: function(src) {
                   this.img.src = src;
@@ -839,7 +876,7 @@
           this.ctx.translate((this.x + options.x) * this.unit, this.height - (this.y + options.y) * this.unit);
 	        this.ctx.scale(options.scaleX, options.scaleY);
 	        this.ctx.rotate(options.angle * Math.PI / 180);
-          ObjectDispatcher[boxObject.dType || boxObject][1].call(this, options);
+          ObjectDispatcher[boxObject.name || boxObject][1].call(this, options);
           this.ctx.restore();
         }
 
@@ -850,9 +887,9 @@
       return graphics;
 
     },
-    KeyEvents:keyUtil,
-    Math:mathUtil,
-    Color:colorUtil
+    Events:events,
+    Math:math,
+    Color:color
   };
 
 

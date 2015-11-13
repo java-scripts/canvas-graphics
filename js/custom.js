@@ -5,7 +5,7 @@ $(document).ready(function(){
 	
 	
 	canvas = $('#canvas');
-	  g = GUtil.createGraphis({
+	  g = CG.createGraphis({
     		target: '#canvas'	
   	         });
 	
