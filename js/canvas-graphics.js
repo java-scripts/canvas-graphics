@@ -25,7 +25,13 @@
 		child.prototype.constructor = child;
 	},
 	noop:function(){
-	}  
+	},	
+	removeFromArray:function(list,item){
+		var index = list.indexOf(item);
+		if(index>-1){
+			list.splice(index,1);
+		}
+	}
   };
   
   var math = {
@@ -594,30 +600,40 @@ window.CG = {
             this.shadowBlur = 0;
             return this;
           },
-		  checkCollission:function(o){			
-			if((o.x-o.w/2-this.w/2 < this.x && this.x < o.x+o.w/2+this.w/2) 
-				&& (o.y-o.h/2-this.h/2 < this.y && this.y < o.y+o.h/2+this.h/2)){
-				//console.log('collission detected');		
-				
-				//find the direction of collission
-				var t_collision = o.y + o.h/2 - (this.y-this.h/2);
-				var b_collision = this.y + this.h/2 - (o.y-o.h/2);
-				var l_collision = this.x + this.w/2 - (o.x-o.w/2);
-				var r_collision = o.x + o.w/2 - (this.x-this.w/2);				
-					
-				//temporarily fliping velocity components
-				//2d collision velocity should be implimented
-				if (t_collision < b_collision && t_collision < l_collision && t_collision < r_collision ){				
-					this.vy=-this.vy; o.vy = -o.vy;
-				}else if (b_collision < t_collision && b_collision < l_collision && b_collision < r_collision){					
-					this.vy=-this.vy; o.vy = -o.vy;
-				}else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision){				
-					this.vx = - this.vx; o.vx = -o.vx;
-				}else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision ){								
-					this.vx = - this.vx; o.vx = -o.vx;
-				}
-			}			
+		  checkCollission:function(list,fn,reflect){		  
+			if(list.constructor!==Array){list=[list]}
+			var o,dir;
+			for(var i in list){
+				o=list[i];
+				if((o.x-o.w/2-this.w/2 < this.x && this.x < o.x+o.w/2+this.w/2) 
+					&& (o.y-o.h/2-this.h/2 < this.y && this.y < o.y+o.h/2+this.h/2)){
+					//console.log('collission detected');					
+					(fn||util.noop)(o);
+					if(reflect){
+						dir=this.getCollissionDirection(o);		
+						(dir=='t'||dir=='b')?this.vy=-this.vy:this.vx=-this.vx;						
+					}
+					break;
+				}	
+			}					
 			return this;
+		  },
+		  getCollissionDirection:function(o){
+			//find the direction of collission
+			var t_collision = o.y + o.h/2 - (this.y-this.h/2);
+			var b_collision = this.y + this.h/2 - (o.y-o.h/2);
+			var l_collision = this.x + this.w/2 - (o.x-o.w/2);
+			var r_collision = o.x + o.w/2 - (this.x-this.w/2);		
+			
+			if (t_collision < b_collision && t_collision < l_collision && t_collision < r_collision ){				
+				return 't';
+			}else if (b_collision < t_collision && b_collision < l_collision && b_collision < r_collision){					
+				return 'b';
+			}else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision){				
+				return 'l';
+			}else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision ){								
+				return 'r';
+			}
 		  }
 		});
 
@@ -913,7 +929,8 @@ window.CG = {
     },
     Events:events,
     Math:math,
-    Color:color
+    Color:color,
+	Util:util
   };
 
 
