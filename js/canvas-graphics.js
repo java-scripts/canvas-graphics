@@ -593,7 +593,32 @@ window.CG = {
             this.shadowOffsetY = 0;
             this.shadowBlur = 0;
             return this;
-          } 		
+          },
+		  checkCollission:function(o){			
+			if((o.x-o.w/2-this.w/2 < this.x && this.x < o.x+o.w/2+this.w/2) 
+				&& (o.y-o.h/2-this.h/2 < this.y && this.y < o.y+o.h/2+this.h/2)){
+				//console.log('collission detected');		
+				
+				//find the direction of collission
+				var t_collision = o.y + o.h/2 - (this.y-this.h/2);
+				var b_collision = this.y + this.h/2 - (o.y-o.h/2);
+				var l_collision = this.x + this.w/2 - (o.x-o.w/2);
+				var r_collision = o.x + o.w/2 - (this.x-this.w/2);				
+					
+				//temporarily fliping velocity components
+				//2d collision velocity should be implimented
+				if (t_collision < b_collision && t_collision < l_collision && t_collision < r_collision ){				
+					this.vy=-this.vy; o.vy = -o.vy;
+				}else if (b_collision < t_collision && b_collision < l_collision && b_collision < r_collision){					
+					this.vy=-this.vy; o.vy = -o.vy;
+				}else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision){				
+					this.vx = - this.vx; o.vx = -o.vx;
+				}else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision ){								
+					this.vx = - this.vx; o.vx = -o.vx;
+				}
+			}			
+			return this;
+		  }
 		});
 
 		
@@ -627,8 +652,11 @@ window.CG = {
           this.theta = -45;
           this.x2 = 1;
           this.y2 = 1;
-
-          this.position2 = function(p) {
+        };
+        //Line.prototype = new Box2d();
+		util.inherit(Line, Box2d);	
+		util.extend(Line.prototype,{			
+          position2:function(p) {
             if (p) {
               this.x2 = p.x;
               this.y2 = p.y;
@@ -638,18 +666,16 @@ window.CG = {
                 y: this.y2
               };
             }
-          };
-
-          //update convers polar to cartisian
-          this.update = function() {
+          },         
+          update:function() {
+			//update convers polar to cartisian
             if (this.type == 'polar') {
               this.x2 = this.x + this.r * Math.cos(math.getRad(this.theta));
               this.y2 = this.y + this.r * Math.sin(math.getRad(this.theta));
             }
-          };
-        };
-        //Line.prototype = new Box2d();
-		util.inherit(Line, Box2d);	
+          }		
+		});
+		
         //--------------------------------------------------------------------------------------------------------------------
         //Sphere
         var Sphere = function() {
@@ -686,8 +712,6 @@ window.CG = {
             that.isReady = true;
             that.onReady();
           };
-
-
         };
         //Img.prototype = new Box2d();
 		util.inherit(Img, Box2d);	
@@ -711,7 +735,7 @@ window.CG = {
 			this.reset();
 		}
 		 //Matrix.prototype = new Box2d();		
-		 util.inherit(Matrix, Box2d);
+		 util.inherit(Matrix, Box2d);		 
 		//--------------------------------------------------------------------------------------------------------------------
         var Path = function() {
           //this.name = 'Path';
@@ -904,8 +928,3 @@ window.requestAnimFrame = (function() {
       window.setTimeout(callback, 1000 / 60);
   };
 })();
-
-
-
-
-
