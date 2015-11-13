@@ -593,7 +593,7 @@ window.CG = {
             this.shadowOffsetY = 0;
             this.shadowBlur = 0;
             return this;
-          }		
+          } 		
 		});
 
 		
